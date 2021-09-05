@@ -11,7 +11,7 @@ class Password:
         l = list((dict(Counter(newPassword))).values())
         l1 = [i for i in l if i != 1]
 
-        if not (len(newPassword) >= 18) and (re.search('[a-z]', newPassword)) and (
+        if not (len(newPassword) >= 8) and (re.search('[a-z]', newPassword)) and (
         re.search('[A-Z]', newPassword)) and (
                 re.search('[0-9]', newPassword)) and (
                 re.search('[!@#$&*]', newPassword)) and (len(re.findall('[!@#$&*]', newPassword)) <= 4) and (
