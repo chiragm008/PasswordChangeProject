@@ -8,56 +8,45 @@ import requests
 
 #-------------------------------------------Tests-------------------------------------------------------
 
-@pytest.mark.parametrize("oldPassword,newPassword",TestData.Password)
-def wtest_case1(oldPassword,newPassword):
-
+@pytest.mark.unittest
+@pytest.mark.parametrize("oldPassword,newPassword",TestData.UnitTestSuccess)
+def test_UnitTestsSuccess(oldPassword,newPassword):
     result = Password.ChangePassword(oldPassword, newPassword)
-    if result == 1:
-        #EndPoint.systemPassword = newPassword
+    assert result==1
+    print('\nPassword Changed Successfully')
 
-        response = requests.post(EndPoint.BASE_URI_API, data=TestData.Password ,verify=False)
-        print("\nPassword changed successfully")
-
-    else:
-        print("\nNew Password condition fails, Please check the password requirement and try again")
-
-
-
-@pytest.mark.parametrize("oldPassword,newPassword",TestData.Password)
-def test_UnitTests(oldPassword,newPassword):
-
+@pytest.mark.unittest
+@pytest.mark.parametrize("oldPassword,newPassword",TestData.UnitTestFail)
+def test_UnitTestsFail(oldPassword,newPassword):
     result = Password.ChangePassword(oldPassword, newPassword)
-    if result == 1:
+    assert result==0
+    print('\nPassword is Invalid, Please try again')
 
-        data = {'oldPassword': oldPassword, 'newPassword': newPassword}
-        headers = {"Content-Type": "application/json"}
-        response = requests.post(EndPoint.BASE_URI_API, headers=headers, data=json.dumps(data) ,verify=False)
-        print("\nStatus Code = ", response.status_code)
-        print("Request URL = ", response.url)
-        print(response.text)
-        print("\nPassword changed successfully")
+@pytest.mark.apitest
+@pytest.mark.parametrize("oldPassword,newPassword",TestData.UnitTestSuccess)
+def test_ApiTestsSuccess(oldPassword,newPassword):
+    data = {'oldPassword': oldPassword, 'newPassword': newPassword}
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(EndPoint.BASE_URI_API, headers=headers, data=json.dumps(data), verify=False)
+    print("\nStatus Code = ", response.status_code)
+    print("Request URL = ", response.url)
+    print(response.text)
+    assert response.status_code == 200
 
-    else:
-        print("\nNew Password condition fails, Please check the password requirement and try again")
+@pytest.mark.apitest
+@pytest.mark.parametrize("oldPassword,newPassword",TestData.UnitTestFail)
+def test_ApiTestsFail(oldPassword,newPassword):
+    data = {'oldPassword': oldPassword, 'newPassword': newPassword}
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(EndPoint.BASE_URI_API, headers=headers, data=json.dumps(data), verify=False)
+    print("\nStatus Code = ", response.status_code)
+    print("Request URL = ", response.url)
+    print(response.text)
+    assert response.status_code==404
 
-@pytest.mark.parametrize("oldPassword,newPassword",TestData.Password)
-def test_ApiTests(oldPassword,newPassword):
 
-    result = Password.ChangePassword(oldPassword, newPassword)
-    if result == 1:
-
-        data = {'oldPassword': oldPassword, 'newPassword': newPassword}
-        headers = {"Content-Type": "application/json"}
-        response = requests.post(EndPoint.BASE_URI_API, headers=headers, data=json.dumps(data) ,verify=False)
-        print("\nStatus Code = ", response.status_code)
-        print("Request URL = ", response.url)
-        print(response.text)
-        print("\nPassword changed successfully")
-
-    else:
-        print("\nNew Password condition fails, Please check the password requirement and try again")
-
-def SystemTest():
+@pytest.mark.systemtest
+def stest_SystemTest():
     oldPassword = getpass(prompt='Enter current password:')
     newPassword = getpass(prompt='Enter new password:')
     result = Password.ChangePassword(oldPassword, newPassword)

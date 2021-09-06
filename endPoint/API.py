@@ -9,7 +9,7 @@ api = Api(app)
 
 #----------------------------------------------Hardcoded Test Data---------------------------------------------
 
-systemPassword = 'Password@1'
+systemPassword = 'Password@1textqu#*'
 changePass = []
 
 
@@ -18,23 +18,26 @@ changePass = []
 class Password:
     def ChangePassword(oldPassword, newPassword):
         if not (oldPassword == systemPassword):
-            print('Old Password is same as system Password')
+            print('Old Password is not same as system Password')
+            return 0
+        if not (int(SequenceMatcher(None, oldPassword, newPassword).ratio() * 100) < 80):
             return 0
 
         l = list((dict(Counter(newPassword))).values())
         l1 = [i for i in l if i != 1]
 
-        if not (len(newPassword) >= 8) and (re.search('[a-z]', newPassword)) and (
+        if (len(newPassword) >= 18) and (re.search('[a-z]', newPassword)) and (
         re.search('[A-Z]', newPassword)) and (
                 re.search('[0-9]', newPassword)) and (
                 re.search('[!@#$&*]', newPassword)) and (len(re.findall('[!@#$&*]', newPassword)) <= 4) and (
                 len(newPassword) / 2 > len(re.findall('[0-9]', newPassword))) and (len(l1) <= 4):
+            print('SUCCESS')
+            return 1
+        else:
+            print(
+                "New Password condition is not matching (Password length should be 18, Atlease 1 each of (uppercase,lowercase,digit,special chars-> !@#$&* (Max can be 4)), Duplicate repeat char not more tha 4, 50% of password should not be number")
             return 0
 
-        if not (int(SequenceMatcher(None, oldPassword, newPassword).ratio() * 100) < 80):
-            return 0
-
-        return 1
 
 #--------------------------------API to Change Password-----------------------------------------------------
 
@@ -52,31 +55,26 @@ def add_pass():
 
     func = Password.ChangePassword(args['oldPassword'], args['newPassword'])
 
-    if args['newPassword'] == systemPassword:
-        return {
-                   'message': "New Password cannot be same as the Existing Password."
-               }, 404
-
-    elif args['newPassword'] == '':
-        return {
-                   'message': "New Password cannot be blank"
-               }, 404
-
-    elif args['oldPassword'] == '':
+    if args['oldPassword'] == '':
         return {
                    'message': "Old Password cannot be blank"
                }, 404
-
     elif args['oldPassword'] != systemPassword:
         return {
                    'message': "Old Password is not matching the system Password"
                }, 404
-
+    elif args['newPassword'] == systemPassword:
+        return {
+                   'message': "New Password cannot be same as the Existing Password."
+               }, 404
+    elif args['newPassword'] == '':
+        return {
+                   'message': "New Password cannot be blank"
+               }, 404
     elif func == 0:
         return {
                    'message': "New Password is Invalid"
                }, 404
-
     else:
         changePass.append(args)
 
