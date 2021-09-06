@@ -6,7 +6,7 @@ from getpass import getpass
 import requests
 
 
-#-------------------------------------------Tests-------------------------------------------------------
+#-------------------------------------------Unit Tests-------------------------------------------------------
 
 @pytest.mark.unittest
 @pytest.mark.parametrize("oldPassword,newPassword",TestData.UnitTestSuccess)
@@ -22,9 +22,11 @@ def test_UnitTestsFail(oldPassword,newPassword):
     assert result==0
     print('\nPassword is Invalid, Please try again')
 
+#-------------------------------------------API Tests-------------------------------------------------------
+
 @pytest.mark.apitest
 @pytest.mark.parametrize("oldPassword,newPassword",TestData.UnitTestSuccess)
-def test_ApiTestsSuccess(oldPassword,newPassword):
+def test_ApiTests_200(oldPassword,newPassword):
     data = {'oldPassword': oldPassword, 'newPassword': newPassword}
     headers = {"Content-Type": "application/json"}
     response = requests.post(EndPoint.BASE_URI_API, headers=headers, data=json.dumps(data), verify=False)
@@ -35,7 +37,7 @@ def test_ApiTestsSuccess(oldPassword,newPassword):
 
 @pytest.mark.apitest
 @pytest.mark.parametrize("oldPassword,newPassword",TestData.UnitTestFail)
-def test_ApiTestsFail(oldPassword,newPassword):
+def test_ApiTests_404(oldPassword,newPassword):
     data = {'oldPassword': oldPassword, 'newPassword': newPassword}
     headers = {"Content-Type": "application/json"}
     response = requests.post(EndPoint.BASE_URI_API, headers=headers, data=json.dumps(data), verify=False)
@@ -43,6 +45,16 @@ def test_ApiTestsFail(oldPassword,newPassword):
     print("Request URL = ", response.url)
     print(response.text)
     assert response.status_code==404
+
+@pytest.mark.apitest
+@pytest.mark.parametrize("oldPassword,newPassword",TestData.ApiTestData)
+def test_ApiTests_400(oldPassword,newPassword):
+    headers = {"Content-Type": "application/json"}
+    response = requests.post(EndPoint.BASE_URI_API, headers=headers, data=json.dumps(TestData.ApiTestData), verify=False)
+    print("\nStatus Code = ", response.status_code)
+    print("Request URL = ", response.url)
+    print(response.text)
+    assert response.status_code==400
 
 
 @pytest.mark.systemtest

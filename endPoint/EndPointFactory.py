@@ -30,4 +30,10 @@ class TestData:
 
 
 
+    ApiTestData = [{'old': 'Password@1textqu#*', 'newPassword': 'Change@1textqu#*'},
+                   {'oldPassword': 'Password@1textqu#*', 'new': 'Change@1textqu#*'},
+                   {'Password': 'Password@1textqu#*', 'Passwordnew': 'Change@1textqu#*'}]
+
+
+
 
