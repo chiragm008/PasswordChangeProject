@@ -1,4 +1,4 @@
-from flask import Flask,jsonify
+from flask import Flask, jsonify
 from flask_restful import Api, reqparse
 import re
 from collections import Counter
@@ -7,13 +7,13 @@ from difflib import SequenceMatcher
 app = Flask(__name__)
 api = Api(app)
 
-#----------------------------------------------Hardcoded Test Data---------------------------------------------
+# ----------------------------------------------Hardcoded Test Data---------------------------------------------
 
 systemPassword = 'Password@1textqu#*'
 changePass = []
 
 
-#---------------------------------------------Change Password Function--------------------------------------
+# ---------------------------------------------Change Password Function--------------------------------------
 
 class Password:
     def ChangePassword(oldPassword, newPassword):
@@ -27,7 +27,7 @@ class Password:
         l1 = [i for i in l if i != 1]
 
         if (len(newPassword) >= 18) and (re.search('[a-z]', newPassword)) and (
-        re.search('[A-Z]', newPassword)) and (
+                re.search('[A-Z]', newPassword)) and (
                 re.search('[0-9]', newPassword)) and (
                 re.search('[!@#$&*]', newPassword)) and (len(re.findall('[!@#$&*]', newPassword)) <= 4) and (
                 len(newPassword) / 2 > len(re.findall('[0-9]', newPassword))) and (len(l1) <= 4):
@@ -35,11 +35,13 @@ class Password:
             return 1
         else:
             print(
-                "New Password condition is not matching (Password length should be 18, Atlease 1 each of (uppercase,lowercase,digit,special chars-> !@#$&* (Max can be 4)), Duplicate repeat char not more tha 4, 50% of password should not be number")
+                "New Password condition is not matching (Password length should be 18, 1 each of (uppercase,"
+                "lowercase,digit,special chars-> !@#$&* (Max can be 4)), Duplicate repeat char not more tha 4, "
+                "50% of password should not be number")
             return 0
 
 
-#--------------------------------API to Change Password-----------------------------------------------------
+# --------------------------------API to Change Password-----------------------------------------------------
 
 @app.route('/password')
 def get_pass():
