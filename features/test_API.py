@@ -7,6 +7,7 @@ import requests
 
 # -------------------------------------------Unit Tests-------------------------------------------------------
 
+# Unit Test to check all the success cases (with valid old password which matches system and a valid new password)
 @pytest.mark.unittest
 @pytest.mark.parametrize("oldPassword,newPassword", TestData.UnitTestSuccess)
 def test_UnitTestsSuccess(oldPassword, newPassword):
@@ -15,6 +16,7 @@ def test_UnitTestsSuccess(oldPassword, newPassword):
     print('\nPassword Changed Successfully')
 
 
+# Unit Test to check all the failure cases (Either invalid old password or invalid new password)
 @pytest.mark.unittest
 @pytest.mark.parametrize("oldPassword,newPassword", TestData.UnitTestFail)
 def test_UnitTestsFail(oldPassword, newPassword):
@@ -25,6 +27,7 @@ def test_UnitTestsFail(oldPassword, newPassword):
 
 # -------------------------------------------API Tests-------------------------------------------------------
 
+# API Tests to check all the 200 SUCCESS status
 @pytest.mark.apitest
 @pytest.mark.parametrize("oldPassword,newPassword", TestData.UnitTestSuccess)
 def test_ApiTests_200(oldPassword, newPassword):
@@ -37,6 +40,7 @@ def test_ApiTests_200(oldPassword, newPassword):
     assert response.status_code == 200
 
 
+# API Tests to check all the 404 FAILURE:NOT FOUND status
 @pytest.mark.apitest
 @pytest.mark.parametrize("oldPassword,newPassword", TestData.UnitTestFail)
 def test_ApiTests_404(oldPassword, newPassword):
@@ -49,6 +53,7 @@ def test_ApiTests_404(oldPassword, newPassword):
     assert response.status_code == 404
 
 
+# API Tests to check all the 400 FAILURE:BAD REQUEST status
 @pytest.mark.apitest
 @pytest.mark.parametrize("oldPassword,newPassword", TestData.ApiTestData)
 def test_ApiTests_400(oldPassword, newPassword):
